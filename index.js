@@ -18,21 +18,23 @@ function getFirstNum(btn) {
 };
 
 function getOperator(btn) {
-  if (operatorSelected === '') {
+  if (operatorSelected != '') {
+    let total = Math.round(operate(firstNum, secondNum) * 100)/100;
+    firstNum = total;
+    secondNum = '';
+    operatorSelected = btn;
+    currentInput.textContent = btn;
+    fullEquation.textContent = firstNum + ' ' + btn;
+    resultScreen.prepend(fullEquation);
+    resultScreen.append(currentInput);
+  } else {
+    total = '';
     currentInput.textContent = '';
     currentInput.textContent = btn;
     resultScreen.append(currentInput);
     operatorSelected = btn;
     fullEquation.textContent = firstNum + ' ' + operatorSelected;
     resultScreen.prepend(fullEquation);
-  } else {
-    let total = Math.round(operate(firstNum, secondNum) * 100)/100;
-    firstNum = total;
-    secondNum = '';
-    currentInput.textContent = btn;
-    fullEquation.textContent = firstNum + ' ' + btn;
-    resultScreen.prepend(fullEquation);
-    resultScreen.append(currentInput);
   };
 };
 
@@ -44,11 +46,10 @@ function getSecondNum(btn) {
   resultScreen.prepend(fullEquation);
 };
 
-function getEqual(btn) {
-  if (operatorSelected === '÷' && secondNum === 0) {
+function getEqual() {
+  if (operatorSelected === '÷' && secondNum == 0) {
     currentInput.textContent = 'cannot divide by 0 buddy';
     resultScreen.append(currentInput);
-    secondNum = ''
   } else if (firstNum !== '' && operatorSelected !== '' && secondNum !== '') {
   total = Math.round(operate(firstNum, secondNum) * 100)/100;
   currentInput.textContent = total;
@@ -186,19 +187,27 @@ document.addEventListener('keydown', (e) => {
 }});
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === '+' || e.key === '-' || e.key === 'x') {
+  if (e.key === '+' || e.key === '-') {
     getOperator(e.key);
   } else if (e.key === '/') {
     e.divide = '÷';
     getOperator(e.divide);
+  } else if (e.key === '*') {
+    e.multiply = 'x';
+    getOperator(e.multiply);
   }
 });
 
 document.addEventListener('keydown', (e) => {
   if (e.key === '.') {
     if (currentInput.textContent.split('').includes('.') === false) {
+      if (currentInput.textContent == '') {
+        currentInput.textContent += '0.';
+        resultScreen.append(currentInput);
+      } else {
       currentInput.textContent += '.';
       resultScreen.append(currentInput);
+      }
     }
   }
 });
@@ -223,46 +232,52 @@ document.addEventListener('keydown', (e) => {
   }
 })
 
+document.addEventListener('keydown', (e) => {
+  if (e.key == 'r' || e.key == 'R') {
+    getRefresh();
+  }
+})
+
 // In one big event listener for keyboard
 
 // document.addEventListener('keydown', (e) => {
-//   if (!isNaN(parseInt(e.key))) {
-//     if (total !== '') {
-//       getRefresh();
-//       getFirstNum(e.key);
-//     } else if (currentInput.textContent.length < 10) {
-//         if (operatorSelected === '') {
-//         getFirstNum(e.key);
-//       } else if (operatorSelected !== '' && secondNum === ''){
-//         currentInput.textContent = '';
-//         getSecondNum(e.key);
-//       } else {
-//         getSecondNum(e.key);
-//       }
-//   }}
-//   else if (e.key === '+' || e.key === '-' || e.key === 'x') {
-//     getOperator(e.key);
-//   } 
-//   else if (e.key === '/') {
-//     e.divide = '÷';
-//     getOperator(e.divide);
-//   } 
-//   else if (e.key === '.' && currentInput.textContent.split('').includes('.') === false) {
-//       currentInput.textContent += '.';
-//       resultScreen.append(currentInput);
-//   }
-//   else if (e.key === '=' || e.key === 'Enter') {
-//     getEqual();
-//   } 
-//   else if (e.key === 'Backspace') {
-//     if (secondNum === '') {
-//       currentInput.textContent = currentInput.textContent.slice(0, -1);
-//       firstNum = parseFloat(currentInput.textContent);
-//       fullEquation.textContent = firstNum;
-//     } else {
-//       currentInput.textContent = currentInput.textContent.slice(0, -1);
-//       secondNum = parseFloat(currentInput.textContent);
-//       fullEquation.textContent = firstNum + ' ' + operatorSelected + ' ' + secondNum;
-//     }
-//   }
+  // if (!isNaN(parseInt(e.key))) {
+  //   if (total !== '') {
+  //     getRefresh();
+  //     getFirstNum(e.key);
+  //   } else if (currentInput.textContent.length < 10) {
+  //       if (operatorSelected === '') {
+  //       getFirstNum(e.key);
+  //     } else if (operatorSelected !== '' && secondNum === ''){
+  //       currentInput.textContent = '';
+  //       getSecondNum(e.key);
+  //     } else {
+  //       getSecondNum(e.key);
+  //     }
+  // }}
+  // else if (e.key === '+' || e.key === '-' || e.key === 'x') {
+  //   getOperator(e.key);
+  // } 
+  // else if (e.key === '/') {
+  //   e.divide = '÷';
+  //   getOperator(e.divide);
+  // } 
+  // else if (e.key === '.' && currentInput.textContent.split('').includes('.') === false) {
+  //     currentInput.textContent += '.';
+  //     resultScreen.append(currentInput);
+  // }
+  // else if (e.key === '=' || e.key === 'Enter') {
+  //   getEqual();
+  // } 
+  // else if (e.key === 'Backspace') {
+  //   if (secondNum === '') {
+  //     currentInput.textContent = currentInput.textContent.slice(0, -1);
+  //     firstNum = parseFloat(currentInput.textContent);
+  //     fullEquation.textContent = firstNum;
+  //   } else {
+  //     currentInput.textContent = currentInput.textContent.slice(0, -1);
+  //     secondNum = parseFloat(currentInput.textContent);
+  //     fullEquation.textContent = firstNum + ' ' + operatorSelected + ' ' + secondNum;
+  //   }
+  // }
 // });
