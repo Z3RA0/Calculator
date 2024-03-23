@@ -1,18 +1,14 @@
-// assign input to variables
+// store input in variables
 let firstNum = '';
 let secondNum = '';
 let operatorSelected = '';
 
-
-// Display input on screen
-const numbers = document.querySelectorAll('.numBtn');
-const operators = document.querySelectorAll('.operatorBtn');
-
+// functions for numbers
 const resultScreen = document.querySelector('.resultScreen');
 const currentInput = document.querySelector('.currentInput')
 const fullEquation = document.querySelector('.fullEquation')
 
-function firstNumInput(btn) {
+function getFirstNum(btn) {
   currentInput.innerText += btn.innerText;
   resultScreen.append(currentInput);
   firstNum = parseFloat(currentInput.innerText);
@@ -20,43 +16,24 @@ function firstNumInput(btn) {
   resultScreen.prepend(fullEquation);
 }
 
-function operatorInput(btn) {
+function getOperator(btn) {
   currentInput.innerText = '';
   currentInput.innerText += btn.innerText;
   resultScreen.append(currentInput);
   operatorSelected = btn.innerText;
-  console.log(operatorSelected);
-  fullEquation.textContent = firstNum + operatorSelected;
+  fullEquation.textContent = firstNum + ' ' + operatorSelected;
   resultScreen.prepend(fullEquation);
 }
 
-function secondNumInput(btn) {
+function getSecondNum(btn) {
   currentInput.innerText += btn.innerText;
   resultScreen.append(currentInput);
   secondNum = parseFloat(currentInput.innerText);
-  fullEquation.textContent = firstNum + operatorSelected + secondNum;
+  fullEquation.textContent = firstNum + ' ' + operatorSelected + ' ' + secondNum;
   resultScreen.prepend(fullEquation);
 }
 
-operators.forEach(operator => {
-  operator.addEventListener('click', () => operatorInput(operator));
-});
-
-
-numbers.forEach(number => {
-  number.addEventListener('click', () => {
-    if (operatorSelected === '') {
-      firstNumInput(number);
-    } else if (operatorSelected !== '' && secondNum === ''){
-      currentInput.innerText = '';
-      secondNumInput(number);
-    } else {
-      secondNumInput(number);
-    }
-  });
-});
-
-// function for operator
+// function for operators
 function add(a, b) {
   return a + b;
 };
@@ -71,15 +48,56 @@ function divide(a, b) {
 };
 
 function operate(a, b) {
-  if (operator === '+') {
+  if (operatorSelected === '+') {
     return add(a, b)
-  } else if (operator === '-'){
+  } else if (operatorSelected === '-'){
     return subtract(a, b)
-  } else if (operator ==='X'){
+  } else if (operatorSelected ==='X'){
     return multiply(a, b)
-  } else if (operator === '+'){
+  } else if (operatorSelected === '÷'){
     return divide(a, b)
-  } else {
-    return alert('invalid input')
   }
 }
+
+// event listeners
+const numbers = document.querySelectorAll('.numBtn');
+const operators = document.querySelectorAll('.operatorBtn');
+
+operators.forEach(operator => {
+  operator.addEventListener('click', () => getOperator(operator));
+});
+
+numbers.forEach(number => {
+  number.addEventListener('click', () => {
+    if (operatorSelected === '') {
+      getFirstNum(number);
+    } else if (operatorSelected !== '' && secondNum === ''){
+      currentInput.innerText = '';
+      getSecondNum(number);
+    } else {
+      getSecondNum(number);
+    }
+  });
+});
+
+const equalBtn = document.querySelector('#equal');
+const refreshBtn = document.querySelector('#refresh');
+
+equalBtn.addEventListener('click', () => {
+  let total = operate(firstNum, secondNum);
+  fullEquation.textContent = '';
+  currentInput.textContent = total;
+  resultScreen.prepend(fullEquation);
+  resultScreen.append(currentInput);
+  firstNum = total;
+});
+
+refreshBtn.addEventListener('click', () => {
+  total = '';
+  firstNum = '';
+  secondNum = '';
+  operatorSelected = '';
+  fullEquation.textContent = '';
+  currentInput.textContent = '';
+});
+
