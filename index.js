@@ -63,19 +63,31 @@ function operate(a, b) {
 const numbers = document.querySelectorAll('.numBtn');
 const operators = document.querySelectorAll('.operatorBtn');
 
+const decimal = document.querySelector('#decimal');
+
+
+decimal.addEventListener('click', () => {
+  if (currentInput.textContent.split('').includes('.') === false) {
+    currentInput.innerText += '.';
+    resultScreen.append(currentInput);
+  }
+})
+
 operators.forEach(operator => {
   operator.addEventListener('click', () => getOperator(operator));
 });
 
 numbers.forEach(number => {
-  number.addEventListener('click', () => {
-    if (operatorSelected === '') {
-      getFirstNum(number);
-    } else if (operatorSelected !== '' && secondNum === ''){
-      currentInput.innerText = '';
-      getSecondNum(number);
-    } else {
-      getSecondNum(number);
+    number.addEventListener('click', () => {
+      if (currentInput.textContent.length < 15) {
+        if (operatorSelected === '') {
+          getFirstNum(number);
+        } else if (operatorSelected !== '' && secondNum === ''){
+          currentInput.innerText = '';
+          getSecondNum(number);
+        } else {
+          getSecondNum(number);
+        }
     }
   });
 });
@@ -84,12 +96,19 @@ const equalBtn = document.querySelector('#equal');
 const refreshBtn = document.querySelector('#refresh');
 
 equalBtn.addEventListener('click', () => {
-  let total = operate(firstNum, secondNum);
+  if (operatorSelected === '÷' && secondNum === 0) {
+    currentInput.textContent = 'cannot divide by 0 buddy';
+    resultScreen.append(currentInput);
+    secondNum = ''
+  } else if (firstNum !== '' && operatorSelected !== '' && secondNum !== '') {
+  let total = Math.round(operate(firstNum, secondNum) * 100)/100;
   fullEquation.textContent = '';
   currentInput.textContent = total;
   resultScreen.prepend(fullEquation);
   resultScreen.append(currentInput);
   firstNum = total;
+  secondNum = '';
+  }
 });
 
 refreshBtn.addEventListener('click', () => {
