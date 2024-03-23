@@ -15,7 +15,7 @@ function getFirstNum(btn) {
   firstNum = parseFloat(currentInput.textContent);
   fullEquation.textContent = firstNum;
   resultScreen.prepend(fullEquation);
-}
+};
 
 function getOperator(btn) {
   if (operatorSelected === '') {
@@ -33,8 +33,8 @@ function getOperator(btn) {
     fullEquation.textContent = firstNum + ' ' + btn;
     resultScreen.prepend(fullEquation);
     resultScreen.append(currentInput);
-  }
-}
+  };
+};
 
 function getSecondNum(btn) {
   currentInput.textContent += btn;
@@ -42,7 +42,7 @@ function getSecondNum(btn) {
   secondNum = parseFloat(currentInput.textContent);
   fullEquation.textContent = firstNum + ' ' + operatorSelected + ' ' + secondNum;
   resultScreen.prepend(fullEquation);
-}
+};
 
 function getEqual(btn) {
   if (operatorSelected === '÷' && secondNum === 0) {
@@ -57,8 +57,8 @@ function getEqual(btn) {
   firstNum = total;
   secondNum = '';
   operatorSelected = '';
-  }
-}
+  };
+};
 
 function getRefresh() {
   total = '';
@@ -69,7 +69,7 @@ function getRefresh() {
   currentInput.textContent = '';
   resultScreen.prepend(fullEquation);
   resultScreen.append(currentInput);
-}
+};
 
 // function for operators
 function add(a, b) {
@@ -102,12 +102,12 @@ const numbers = document.querySelectorAll('.numBtn');
 
 numbers.forEach(number => {
   number.addEventListener('click', () => {
-    if (currentInput.textContent.length < 15) {
-      if (total !== '') {
-        getRefresh();
-        num = number.textContent;
-        getFirstNum(num);
-      } else if (operatorSelected === '') {
+    if (total !== '') {
+      getRefresh();
+      num = number.textContent;
+      getFirstNum(num);
+    } else if (currentInput.textContent.length < 10) {
+        if (operatorSelected === '') {
         num = number.textContent;
         getFirstNum(num);
       } else if (operatorSelected !== '' && secondNum === ''){
@@ -168,11 +168,13 @@ refreshBtn.addEventListener('click', () => {
 });
 
 // keyboard support
-
 document.addEventListener('keydown', (e) => {
-  if (!isNaN(e.key)) {
-    if (currentInput.textContent.length < 15) {
-      if (operatorSelected === '') {
+  if (!isNaN(parseInt(e.key))) {
+    if (total !== '') {
+      getRefresh();
+      getFirstNum(e.key);
+    } else if (currentInput.textContent.length < 10) {
+        if (operatorSelected === '') {
         getFirstNum(e.key);
       } else if (operatorSelected !== '' && secondNum === ''){
         currentInput.textContent = '';
@@ -180,9 +182,8 @@ document.addEventListener('keydown', (e) => {
       } else {
         getSecondNum(e.key);
       }
-    }
   }
-});
+}});
 
 document.addEventListener('keydown', (e) => {
   if (e.key === '+' || e.key === '-' || e.key === 'x') {
@@ -220,7 +221,48 @@ document.addEventListener('keydown', (e) => {
       fullEquation.textContent = firstNum + ' ' + operatorSelected + ' ' + secondNum;
     }
   }
-});
+})
 
+// In one big event listener for keyboard
 
-
+// document.addEventListener('keydown', (e) => {
+//   if (!isNaN(parseInt(e.key))) {
+//     if (total !== '') {
+//       getRefresh();
+//       getFirstNum(e.key);
+//     } else if (currentInput.textContent.length < 10) {
+//         if (operatorSelected === '') {
+//         getFirstNum(e.key);
+//       } else if (operatorSelected !== '' && secondNum === ''){
+//         currentInput.textContent = '';
+//         getSecondNum(e.key);
+//       } else {
+//         getSecondNum(e.key);
+//       }
+//   }}
+//   else if (e.key === '+' || e.key === '-' || e.key === 'x') {
+//     getOperator(e.key);
+//   } 
+//   else if (e.key === '/') {
+//     e.divide = '÷';
+//     getOperator(e.divide);
+//   } 
+//   else if (e.key === '.' && currentInput.textContent.split('').includes('.') === false) {
+//       currentInput.textContent += '.';
+//       resultScreen.append(currentInput);
+//   }
+//   else if (e.key === '=' || e.key === 'Enter') {
+//     getEqual();
+//   } 
+//   else if (e.key === 'Backspace') {
+//     if (secondNum === '') {
+//       currentInput.textContent = currentInput.textContent.slice(0, -1);
+//       firstNum = parseFloat(currentInput.textContent);
+//       fullEquation.textContent = firstNum;
+//     } else {
+//       currentInput.textContent = currentInput.textContent.slice(0, -1);
+//       secondNum = parseFloat(currentInput.textContent);
+//       fullEquation.textContent = firstNum + ' ' + operatorSelected + ' ' + secondNum;
+//     }
+//   }
+// });
