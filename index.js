@@ -64,7 +64,19 @@ const numbers = document.querySelectorAll('.numBtn');
 const operators = document.querySelectorAll('.operatorBtn');
 
 const decimal = document.querySelector('#decimal');
+const back = document.querySelector('#back');
 
+back.addEventListener('click', () => {
+  if (secondNum === '') {
+    currentInput.textContent = currentInput.textContent.slice(0, -1);
+    firstNum = parseFloat(currentInput.innerText);
+    fullEquation.textContent = firstNum;
+  } else {
+    currentInput.textContent = currentInput.textContent.slice(0, -1);
+    secondNum = parseFloat(currentInput.innerText);
+    fullEquation.textContent = firstNum + ' ' + operatorSelected + ' ' + secondNum;
+  }
+});
 
 decimal.addEventListener('click', () => {
   if (currentInput.textContent.split('').includes('.') === false) {
